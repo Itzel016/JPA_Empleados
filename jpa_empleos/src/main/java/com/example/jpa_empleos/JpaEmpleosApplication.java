@@ -24,16 +24,28 @@ public class JpaEmpleosApplication implements CommandLineRunner {
         SpringApplication.run(JpaEmpleosApplication.class, args);
     }
 
-    @Override
-    public void run(String... args) throws Exception {
-        buscarTodasJPA();
-    }
+   @Override
+public void run(String... args) throws Exception {
+    borrarTodasEnBloque();
+}
 
-    /** * Método findAll - Interfaz JPARepository */
-    private void buscarTodasJPA() {
-        List<Categoria> categorias = categoriasJPARepo.findAll();
-        for (Categoria categoria : categorias) {
-            System.out.println(categoria.getId() + " " + categoria.getNombre());
-        }
+/**
+ * Método findAll - Interfaz JpaRepository
+ */
+private void buscarTodasJPA() {
+    List<Categoria> categorias = categoriasJPARepo.findAll();
+
+    for (Categoria categoria : categorias) {
+        System.out.println(
+            categoria.getId() + " " + categoria.getNombre()
+        );
     }
+}
+
+/**
+ * Método deleteAllInBatch [Usar con precaución] - Interfaz JpaRepository
+ */
+private void borrarTodasEnBloque() {
+    categoriasJPARepo.deleteAllInBatch();
+}
 }
