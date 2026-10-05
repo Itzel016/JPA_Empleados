@@ -7,6 +7,8 @@ import com.example.jpa_empleos.repository.CategoriasRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -31,8 +33,7 @@ public class JpaEmpleosApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        buscarTodosOrdenados();
-        buscarTodosOrdenadosDescendente();
+        buscarTodosPaginacion();
     }
 
     /**
@@ -52,7 +53,8 @@ public class JpaEmpleosApplication implements CommandLineRunner {
     }
 
     /**
-     * Método deleteAllInBatch [Usar con precaución] - Interfaz JpaRepository
+     * Método deleteAllInBatch [Usar con precaución]
+     * - Interfaz JpaRepository
      */
     private void borrarTodasEnBloque() {
         categoriasJPARepo.deleteAllInBatch();
@@ -62,8 +64,6 @@ public class JpaEmpleosApplication implements CommandLineRunner {
      * Método findAll [Ordenados por nombre - Ascendente]
      */
     private void buscarTodosOrdenados() {
-
-        System.out.println("=== ORDEN ASCENDENTE ===");
 
         List<Categoria> categorias =
                 categoriasJPARepo.findAll(
@@ -84,8 +84,6 @@ public class JpaEmpleosApplication implements CommandLineRunner {
      */
     private void buscarTodosOrdenadosDescendente() {
 
-        System.out.println("=== ORDEN DESCENDENTE ===");
-
         List<Categoria> categorias =
                 categoriasJPARepo.findAll(
                         Sort.by("nombre").descending()
@@ -96,6 +94,35 @@ public class JpaEmpleosApplication implements CommandLineRunner {
                     categoria.getId() + " " +
                     categoria.getDescripcion() + " " +
                     categoria.getNombre()
+            );
+        }
+    }
+
+    /**
+     * Método findAll [Con Paginación]
+     * - Interfaz JpaRepository
+     */
+    private void buscarTodosPaginacion() {
+
+        Page<Categoria> page =
+                categoriasJPARepo.findAll(
+                        PageRequest.of(3, 5)
+                );
+
+        System.out.println(
+                "Total Registros: " +
+                page.getTotalElements()
+        );
+
+        System.out.println(
+                "Total Paginas: " +
+                page.getTotalPages()
+        );
+
+        for (Categoria c : page.getContent()) {
+            System.out.println(
+                    c.getId() + " " +
+                    c.getNombre()
             );
         }
     }
