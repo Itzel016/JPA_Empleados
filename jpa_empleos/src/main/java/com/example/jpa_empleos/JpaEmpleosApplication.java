@@ -32,6 +32,7 @@ public class JpaEmpleosApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         buscarTodosOrdenados();
+        buscarTodosOrdenadosDescendente();
     }
 
     /**
@@ -58,13 +59,36 @@ public class JpaEmpleosApplication implements CommandLineRunner {
     }
 
     /**
-     * Método findAll [Ordenados por nombre] - Interfaz JpaRepository
+     * Método findAll [Ordenados por nombre - Ascendente]
      */
     private void buscarTodosOrdenados() {
+
+        System.out.println("=== ORDEN ASCENDENTE ===");
 
         List<Categoria> categorias =
                 categoriasJPARepo.findAll(
                         Sort.by("nombre")
+                );
+
+        for (Categoria categoria : categorias) {
+            System.out.println(
+                    categoria.getId() + " " +
+                    categoria.getDescripcion() + " " +
+                    categoria.getNombre()
+            );
+        }
+    }
+
+    /**
+     * Método findAll [Ordenados por nombre - Descendente]
+     */
+    private void buscarTodosOrdenadosDescendente() {
+
+        System.out.println("=== ORDEN DESCENDENTE ===");
+
+        List<Categoria> categorias =
+                categoriasJPARepo.findAll(
+                        Sort.by("nombre").descending()
                 );
 
         for (Categoria categoria : categorias) {
