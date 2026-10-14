@@ -51,23 +51,6 @@ public void run(String... args) throws Exception {
 /**
  * Método para buscar un usuario y mostrar sus perfiles asociados.
  */
-public void buscarUsuario() {
-    Optional<Usuario> usuarioOptional = usuarioRepo.findById(1);
-
-    if (usuarioOptional.isPresent()) {
-        Usuario usuario = usuarioOptional.get();
-
-        System.out.println("\n=== USUARIO ENCONTRADO ===");
-        System.out.println("Nombre: " + usuario.getNombre());
-        System.out.println("Perfiles asignados:");
-
-        for (Perfil perfil : usuario.getPerfiles()) {
-            System.out.println(perfil.getPerfil());
-        }
-    } else {
-        System.out.println("No existe un usuario con ID = 1.");
-    }
-}
-
+public void buscarUsuario() { Optional<Usuario> usuarioOptional = usuarioRepo.findById(50); if (usuarioOptional.isPresent()) { Usuario usuario = usuarioOptional.get(); System.out.println("Nombre: " + usuario.getNombre()); System.out.println("Perfiles asignados"); for (Perfil perfil : usuario.getPerfiles()) { System.out.println(perfil.getPerfil()); } } else { System.out.println("Usuario no encontrado"); } } 
 
 }
