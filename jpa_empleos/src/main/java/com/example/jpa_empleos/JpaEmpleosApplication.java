@@ -29,12 +29,12 @@ public class JpaEmpleosApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // Ejercicio 1: consultar todas las vacantes y sus categorías
-       // buscarVacantes();
+        buscarVacantes();
 
         // Ejercicio 2: guardar una nueva vacante
         // Se deja comentado para evitar insertar duplicados
         // cada vez que se inicia la aplicación.
-         guardarVacante();
+         //guardarVacante();
     }
 
     /**
