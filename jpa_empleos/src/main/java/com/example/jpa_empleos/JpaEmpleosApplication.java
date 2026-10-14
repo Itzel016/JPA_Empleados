@@ -1,17 +1,23 @@
 package com.example.jpa_empleos;
 
-import com.example.jpa_empleos.repository.CategoriasRepository;
+
+import com.example.jpa_empleos.models.EstatusVacante;
+import com.example.jpa_empleos.models.Vacante;
+import com.example.jpa_empleos.repository.VacantesRespository;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.List;
+
 @SpringBootApplication
 public class JpaEmpleosApplication implements CommandLineRunner {
 
-    private final CategoriasRepository categoriasRepo;
+    private final VacantesRespository vacantesRepo;
 
-    public JpaEmpleosApplication(CategoriasRepository categoriasRepo) {
-        this.categoriasRepo = categoriasRepo;
+    public JpaEmpleosApplication(VacantesRespository vacantesRepo) {
+        this.vacantesRepo = vacantesRepo;
     }
 
     public static void main(String[] args) {
@@ -20,14 +26,26 @@ public class JpaEmpleosApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        mostrarCategorias();
+        buscarVacantesPorEstatus();
     }
 
-    private void mostrarCategorias() {
-        System.out.println("=== TODAS LAS CATEGORÍAS ===");
+    /**
+     * Query Method: Buscar Vacantes por Estatus.
+     */
+    private void buscarVacantesPorEstatus() {
 
-        categoriasRepo.findAll().forEach(categoria -> {
-            System.out.println(categoria);
-        });
+        List<Vacante> vacantesAprobadas = vacantesRepo
+                .findByEstatus(EstatusVacante.Aprobada);
+
+        System.out.println("Registros encontrados: "
+                + vacantesAprobadas.size());
+
+        for (Vacante vacante : vacantesAprobadas) {
+            System.out.println(
+                    vacante.getId() + ": "
+                    + vacante.getNombre() + " - "
+                    + vacante.getEstatus()
+            );
+        }
     }
 }
