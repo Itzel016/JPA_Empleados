@@ -26,34 +26,52 @@ public class JpaEmpleosApplication implements CommandLineRunner {
 
     @Override
 public void run(String... args) throws Exception {
-    buscarVacantesPorDestacadoEstatus();
+    buscarVacantesSalario();
 }
 
-    
-/**
- * Query Method: Buscar Vacantes por Destacado y Estatus
- * Ordenadas por ID descendente.
- */
-private void buscarVacantesPorDestacadoEstatus() {
 
-    List<Vacante> vacantesAprobadasYDestacadas = vacantesRepo
-            .findByDestacadoAndEstatusOrderByIdDesc(
-                    1,
-                    EstatusVacante.Aprobada
+/**
+ * Query Method: Buscar Vacantes por rango de Salario (Between).
+ */
+private void buscarVacantesSalario() {
+
+    // Primera consulta: rango de salarios sin ordenamiento explícito
+    List<Vacante> vacantesSalariosEntre7000y14000 = vacantesRepo
+            .findBySalarioBetween(7000.0, 14000.0);
+
+    System.out.println("Registros encontrados: "
+            + vacantesSalariosEntre7000y14000.size());
+
+    for (Vacante vacante : vacantesSalariosEntre7000y14000) {
+        System.out.println(
+                vacante.getId() + ": "
+                + vacante.getNombre()
+                + " - $"
+                + vacante.getSalario()
+        );
+    }
+
+    System.out.println("-".repeat(100));
+
+    // Segunda consulta: mismo rango, ordenado por salario descendente
+    List<Vacante> vacantesSalariosEntre7000y14000Desc = vacantesRepo
+            .findBySalarioBetweenOrderBySalarioDesc(
+                    7000.0,
+                    14000.0
             );
 
     System.out.println("Registros encontrados: "
-            + vacantesAprobadasYDestacadas.size());
+            + vacantesSalariosEntre7000y14000Desc.size());
 
-    for (Vacante vacante : vacantesAprobadasYDestacadas) {
+    for (Vacante vacante : vacantesSalariosEntre7000y14000Desc) {
         System.out.println(
                 vacante.getId() + ": "
-                + vacante.getNombre() + " - "
-                + vacante.getEstatus()
-                + ", destacada: "
-                + vacante.getDestacado()
+                + vacante.getNombre()
+                + " - $"
+                + vacante.getSalario()
         );
     }
 }
+
 
 }
