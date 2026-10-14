@@ -23,52 +23,32 @@ public class JpaEmpleosApplication implements CommandLineRunner {
     public static void main(String[] args) {
         SpringApplication.run(JpaEmpleosApplication.class, args);
     }
-
-    @Override
+@Override
 public void run(String... args) throws Exception {
-    buscarVacantesSalario();
+    buscarVacantesVariosEstatus();
 }
 
-
 /**
- * Query Method: Buscar Vacantes por rango de Salario (Between).
+ * Query Method: Buscar Vacantes por varios Estatus (In).
  */
-private void buscarVacantesSalario() {
+private void buscarVacantesVariosEstatus() {
 
-    // Primera consulta: rango de salarios sin ordenamiento explícito
-    List<Vacante> vacantesSalariosEntre7000y14000 = vacantesRepo
-            .findBySalarioBetween(7000.0, 14000.0);
+    EstatusVacante[] listaEstatus = new EstatusVacante[]{
+            EstatusVacante.Eliminada,
+            EstatusVacante.Creada
+    };
 
-    System.out.println("Registros encontrados: "
-            + vacantesSalariosEntre7000y14000.size());
-
-    for (Vacante vacante : vacantesSalariosEntre7000y14000) {
-        System.out.println(
-                vacante.getId() + ": "
-                + vacante.getNombre()
-                + " - $"
-                + vacante.getSalario()
-        );
-    }
-
-    System.out.println("-".repeat(100));
-
-    // Segunda consulta: mismo rango, ordenado por salario descendente
-    List<Vacante> vacantesSalariosEntre7000y14000Desc = vacantesRepo
-            .findBySalarioBetweenOrderBySalarioDesc(
-                    7000.0,
-                    14000.0
-            );
+    List<Vacante> vacantesVariosEstatus = vacantesRepo
+            .findByEstatusIn(listaEstatus);
 
     System.out.println("Registros encontrados: "
-            + vacantesSalariosEntre7000y14000Desc.size());
+            + vacantesVariosEstatus.size());
 
-    for (Vacante vacante : vacantesSalariosEntre7000y14000Desc) {
+    for (Vacante vacante : vacantesVariosEstatus) {
         System.out.println(
                 vacante.getId() + ": "
-                + vacante.getNombre()
-                + " - $"
-                + vacante.getSalario()
+                + vacante.getNombre() + " - "
+                + vacante.getEstatus()
         );
     }
 }
