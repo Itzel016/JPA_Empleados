@@ -1,17 +1,22 @@
+
 package com.example.jpa_empleos;
 
-import com.example.jpa_empleos.repository.CategoriasRepository;
+import com.example.jpa_empleos.models.Vacante;
+import com.example.jpa_empleos.repository.VacantesRepository;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.List;
+
 @SpringBootApplication
 public class JpaEmpleosApplication implements CommandLineRunner {
 
-    private final CategoriasRepository categoriasRepo;
+    private final VacantesRepository vacantesRepo;
 
-    public JpaEmpleosApplication(CategoriasRepository categoriasRepo) {
-        this.categoriasRepo = categoriasRepo;
+    public JpaEmpleosApplication(VacantesRepository vacantesRepo) {
+        this.vacantesRepo = vacantesRepo;
     }
 
     public static void main(String[] args) {
@@ -20,14 +25,20 @@ public class JpaEmpleosApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        mostrarCategorias();
+        buscarVacantes();
     }
 
-    private void mostrarCategorias() {
-        System.out.println("=== TODAS LAS CATEGORÍAS ===");
+    /**
+     * Método findAll - Interfaz JpaRepository
+     */
+    private void buscarVacantes() {
+        List<Vacante> vacantes = vacantesRepo.findAll();
 
-        categoriasRepo.findAll().forEach(categoria -> {
-            System.out.println(categoria);
-        });
+        for (Vacante vacante : vacantes) {
+            System.out.println(
+                vacante.getId() + ". " + vacante.getNombre()
+            );
+        }
     }
 }
+
