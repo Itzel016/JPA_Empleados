@@ -13,9 +13,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.example.jpa_empleos.models.Usuario;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
-
+import java.util.Optional;
 @SpringBootApplication
 public class JpaEmpleosApplication implements CommandLineRunner {
 
@@ -43,46 +42,32 @@ public class JpaEmpleosApplication implements CommandLineRunner {
         SpringApplication.run(JpaEmpleosApplication.class, args);
     }
 
-    @Override
+  @Override
 public void run(String... args) throws Exception {
-    crearUsuarioConPerfiles();
+    buscarUsuario();
 }
 
-    
+
 /**
- * Crear usuario con los perfiles ADMINISTRADOR y USUARIO.
+ * Método para buscar un usuario y mostrar sus perfiles asociados.
  */
-private void crearUsuarioConPerfiles() {
-    Usuario nuevoUsuario = new Usuario();
+public void buscarUsuario() {
+    Optional<Usuario> usuarioOptional = usuarioRepo.findById(1);
 
-    nuevoUsuario.setNombre("José García");
-    nuevoUsuario.setEmail("jose@gmail.com");
-    nuevoUsuario.setUsername("joseg");
-    nuevoUsuario.setPassword("12345");
-    nuevoUsuario.setEstatus(1);
-    nuevoUsuario.setFechaRegistro(LocalDate.now());
+    if (usuarioOptional.isPresent()) {
+        Usuario usuario = usuarioOptional.get();
 
-    Perfil perfil1 = perfilesRepo.findById(2)
-            .orElseThrow(() ->
-                    new IllegalStateException(
-                            "No existe el perfil con ID 2"));
+        System.out.println("\n=== USUARIO ENCONTRADO ===");
+        System.out.println("Nombre: " + usuario.getNombre());
+        System.out.println("Perfiles asignados:");
 
-    Perfil perfil2 = perfilesRepo.findById(3)
-            .orElseThrow(() ->
-                    new IllegalStateException(
-                            "No existe el perfil con ID 3"));
-
-    Set<Perfil> perfilesUsuario = new HashSet<>();
-    perfilesUsuario.add(perfil1);
-    perfilesUsuario.add(perfil2);
-
-    nuevoUsuario.setPerfiles(perfilesUsuario);
-
-    Usuario usuarioGuardado = usuarioRepo.save(nuevoUsuario);
-
-    System.out.println(
-            "Usuario guardado correctamente. ID: "
-                    + usuarioGuardado.getId());
+        for (Perfil perfil : usuario.getPerfiles()) {
+            System.out.println(perfil.getPerfil());
+        }
+    } else {
+        System.out.println("No existe un usuario con ID = 1.");
+    }
 }
+
 
 }
