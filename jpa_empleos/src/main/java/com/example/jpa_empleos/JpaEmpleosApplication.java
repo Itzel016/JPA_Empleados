@@ -10,9 +10,11 @@ import com.example.jpa_empleos.repository.VacantesRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+import com.example.jpa_empleos.models.Usuario;
+import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 @SpringBootApplication
 public class JpaEmpleosApplication implements CommandLineRunner {
@@ -42,36 +44,45 @@ public class JpaEmpleosApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
-        crearPerfiles();
-    }
+public void run(String... args) throws Exception {
+    crearUsuarioConPerfiles();
+}
 
-    /**
-     * Método para crear los perfiles.
-     */
-    private void crearPerfiles() {
-        perfilesRepo.saveAll(obtenerPerfiles());
-    }
+    
+/**
+ * Crear usuario con los perfiles ADMINISTRADOR y USUARIO.
+ */
+private void crearUsuarioConPerfiles() {
+    Usuario nuevoUsuario = new Usuario();
 
-    /**
-     * Regresa una lista de los perfiles de la aplicación.
-     */
-    private List<Perfil> obtenerPerfiles() {
-        List<Perfil> perfiles = new LinkedList<>();
+    nuevoUsuario.setNombre("José García");
+    nuevoUsuario.setEmail("jose@gmail.com");
+    nuevoUsuario.setUsername("joseg");
+    nuevoUsuario.setPassword("12345");
+    nuevoUsuario.setEstatus(1);
+    nuevoUsuario.setFechaRegistro(LocalDate.now());
 
-        Perfil perfil1 = new Perfil();
-        perfil1.setPerfil("SUPERVISOR");
+    Perfil perfil1 = perfilesRepo.findById(2)
+            .orElseThrow(() ->
+                    new IllegalStateException(
+                            "No existe el perfil con ID 2"));
 
-        Perfil perfil2 = new Perfil();
-        perfil2.setPerfil("ADMINISTRADOR");
+    Perfil perfil2 = perfilesRepo.findById(3)
+            .orElseThrow(() ->
+                    new IllegalStateException(
+                            "No existe el perfil con ID 3"));
 
-        Perfil perfil3 = new Perfil();
-        perfil3.setPerfil("USUARIO");
+    Set<Perfil> perfilesUsuario = new HashSet<>();
+    perfilesUsuario.add(perfil1);
+    perfilesUsuario.add(perfil2);
 
-        perfiles.add(perfil1);
-        perfiles.add(perfil2);
-        perfiles.add(perfil3);
+    nuevoUsuario.setPerfiles(perfilesUsuario);
 
-        return perfiles;
-    }
+    Usuario usuarioGuardado = usuarioRepo.save(nuevoUsuario);
+
+    System.out.println(
+            "Usuario guardado correctamente. ID: "
+                    + usuarioGuardado.getId());
+}
+
 }
